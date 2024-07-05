@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func InitTodoFile() (todoPath string, err error) {
+func InitTodosFile() (todoPath string, err error) {
 	todoPath = ""
 	home, err := os.UserHomeDir()
 	if err != nil {

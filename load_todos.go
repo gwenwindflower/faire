@@ -8,7 +8,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func FetchTodos(todoPath string) ([]Todo, error) {
+func LoadTodos(todoPath string) ([]Todo, error) {
 	todos := []Todo{}
 	todoFile, err := os.Open(todoPath)
 	if err != nil {

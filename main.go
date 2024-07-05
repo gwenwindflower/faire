@@ -39,21 +39,38 @@ type model struct {
 }
 
 func initialModel() model {
-	todoPath, err := InitTodoFile()
+	// We store Todos in YAML in ~/.config/faire/todos.yaml
+	// I chose to use a YAML file because it's human readable
+	// so if something gets borked you can fix it manually
+	// It's also easy to marshal and unmarshal in Go and convert
+	// to other formats like JSON if we eventually build a web
+	// interface or something
+	todoPath, err := InitTodosFile()
 	if err != nil || todoPath == "" {
 		log.Fatalf("Could not initialize or find existing todo file: %v", err)
 	}
-	todos, err := FetchTodos(todoPath)
+	todos, err := LoadTodos(todoPath)
 	if err != nil {
+		// If we can't load the todos file, we should exit
+		// because we can't do anything without it
 		log.Fatalf("Could not fetch todos: %v", err)
 	}
+	// Choices is a slice of the Todo.Task fields
+	// we use it as the working state, it's loaded
+	// and written on startup and shutdown respectively
 	choices := []string{}
 	for _, todo := range todos {
+		// This is a common pattern in Go, to grab
+		// a field from a slice of structs and make a slice of
+		// just that field
 		choices = append(choices, todo.Task)
 	}
+	// Text Input is a Bubble, a reusable component built in Bubble Tea
+	// for use in Bubble Tea programs. Saves us writing our own.
 	ti := textinput.New()
 	ti.Placeholder = "Enter a new task"
 	ti.Focus()
+	ti.Cursor.BlinkSpeed = 300
 	return model{
 		choices:          choices,
 		todos:            todos,
@@ -67,117 +84,27 @@ func (m model) Init() tea.Cmd {
 	return textinput.Blink
 }
 
-func deleteTodo(inputTodos []Todo, inputChoices []string, cursor int) (todos []Todo, choices []string) {
-	todos = append(inputTodos[:cursor], inputTodos[cursor+1:]...)
-	choices = append(inputChoices[:cursor], inputChoices[cursor+1:]...)
-	return todos, choices
-}
-
-func (m model) selectUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.String() {
-		case "ctrl+c", "q":
-			WriteTodos(m.todoPath, m.todos)
-			return m, tea.Quit
-		case "j", "down":
-			if m.cursor < len(m.choices)-1 {
-				m.cursor++
-			} else {
-				m.cursor = 0
-			}
-		case "k", "up":
-			if m.cursor > 0 {
-				m.cursor--
-			} else {
-				m.cursor = len(m.choices) - 1
-			}
-		case "enter", " ":
-			if m.todos[m.cursor].Status == NotStarted {
-				m.todos[m.cursor].Status = Done
-			} else {
-				m.todos[m.cursor].Status = NotStarted
-			}
-		case "d":
-			m.todos, m.choices = deleteTodo(m.todos, m.choices, m.cursor)
-		case "a":
-			m.activeView = AddViewId
-		}
-	}
-	return m, nil
-}
-
-func (m model) addUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
-	var cmd tea.Cmd
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.String() {
-		case "esc":
-			m.activeView = SelectViewId
-		case "enter":
-			task := m.newTaskTextInput.Value()
-			if task == "" {
-				m.activeView = SelectViewId
-			} else {
-				m.todos = append(m.todos, Todo{Task: task, Status: NotStarted})
-				m.choices = append(m.choices, task)
-				err := WriteTodos(m.todoPath, m.todos)
-				if err != nil {
-					log.Fatalf("Could not write todos: %v", err)
-				}
-				m.activeView = SelectViewId
-			}
-		default:
-			m.newTaskTextInput, cmd = m.newTaskTextInput.Update(msg)
-		}
-	}
-	return m, cmd
-}
-
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch m.activeView {
 		case SelectViewId:
-			return m.selectUpdate(msg)
+			return m.UpdateSelect(msg)
 		case AddViewId:
-			return m.addUpdate(msg)
+			return m.UpdateAdd(msg)
 		}
 	}
 	return m, nil
 }
 
-func (m model) selectView() string {
-	s := "What do you want to accomplish?\n\n"
-	for i, choice := range m.choices {
-		cursor := " "
-		if m.cursor == i {
-			cursor = "➔"
-		}
-		checked := " "
-		if m.todos[i].Status == Done {
-			checked = "✔"
-		}
-		s += fmt.Sprintf("%s %s %s\n", cursor, checked, choice)
-	}
-	s += "\nPress 'a' to add a new todo, 'q' to quit."
-	return s
-}
-
-func (m model) addView() string {
-	return fmt.Sprintf(
-		"Enter a new todo:\n\n%s\n\nPress Enter to add, or Esc to cancel.", m.newTaskTextInput.View(),
-	)
-}
-
 func (m model) View() string {
 	switch m.activeView {
 	case SelectViewId:
-		return m.selectView()
+		return m.ViewSelect()
 	case AddViewId:
-		return m.addView()
+		return m.ViewAdd()
 	default:
-		return "Unknown view"
+		return fmt.Sprintf("Unknown view: %v", m.activeView)
 	}
 }
 
