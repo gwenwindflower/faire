@@ -20,6 +20,9 @@ var selectedStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("#414559")).
 	Background(lipgloss.Color("#C6D0F5"))
 
+var dueDateStyle = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("#f4b8e4"))
+
 func (m model) ViewSelect() string {
 	s := headerStyle.Render("What do you want to do today 🤗?") + "\n"
 	var task string
@@ -42,7 +45,8 @@ func (m model) ViewSelect() string {
 			checked = "⬚"
 		}
 		if todo.DueDate.IsSet() {
-			s += fmt.Sprintf("%s %s %s\n", checked, task, todo.DueDate.Format("2006-01-02"))
+			dueDate := dueDateStyle.Render(todo.DueDate.Format("2006-01-02"))
+			s += fmt.Sprintf("%s %s %s\n", checked, task, dueDate)
 		} else {
 			s += fmt.Sprintf("%s %s\n", checked, task)
 		}

@@ -44,6 +44,12 @@ func (m model) UpdateSelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.cursor > len(m.todos)-1 {
 				m.cursor = len(m.todos) - 1
 			}
+		case "D":
+			for i, todo := range m.todos {
+				if todo.Status == Done {
+					m.todos, m.graveyard = deleteTodo(m.todos, m.graveyard, i)
+				}
+			}
 		case "u":
 			m.todos, m.graveyard = undoDeleteTodo(m.todos, m.graveyard)
 		case "a":
