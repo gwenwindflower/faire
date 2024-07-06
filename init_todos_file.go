@@ -6,22 +6,22 @@ import (
 	"path/filepath"
 )
 
-func InitTodosFile() (todoPath string, err error) {
-	todoPath = ""
+func InitTodosFile() (tp string, err error) {
+	tp = ""
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return todoPath, fmt.Errorf("could not get user home directory: %v", err)
+		return tp, fmt.Errorf("could not get user home directory: %v", err)
 	}
-	todoPath = filepath.Join(home, ".config", "faire", "todos.yaml")
-	_, err = os.Stat(todoPath)
+	tp = filepath.Join(home, ".config", "faire", "todos.yaml")
+	_, err = os.Stat(tp)
 	if os.IsNotExist(err) {
-		os.MkdirAll(filepath.Dir(todoPath), 0755)
-		_, err = os.Create(todoPath)
+		os.MkdirAll(filepath.Dir(tp), 0755)
+		_, err = os.Create(tp)
 		if err != nil {
-			return todoPath, fmt.Errorf("could not create todos file: %v", err)
+			return tp, fmt.Errorf("could not create todos file: %v", err)
 		}
 	} else if err != nil {
-		return todoPath, fmt.Errorf("error checking for todos file: %v", err)
+		return tp, fmt.Errorf("error checking for todos file: %v", err)
 	}
-	return todoPath, nil
+	return tp, nil
 }

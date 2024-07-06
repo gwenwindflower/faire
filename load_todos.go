@@ -5,23 +5,23 @@ import (
 	"log"
 	"os"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 func LoadTodos(todoPath string) ([]Todo, error) {
-	todos := []Todo{}
-	todoFile, err := os.Open(todoPath)
+	t := []Todo{}
+	tf, err := os.Open(todoPath)
 	if err != nil {
 		log.Fatalf("Could not open todos file: %v", err)
 	}
-	defer todoFile.Close()
-	data, err := io.ReadAll(todoFile)
+	defer tf.Close()
+	data, err := io.ReadAll(tf)
 	if err != nil {
 		log.Fatalf("Could not read todos file: %v", err)
 	}
-	err = yaml.Unmarshal(data, &todos)
+	err = yaml.Unmarshal(data, &t)
 	if err != nil {
 		log.Fatalf("Could not unmarshal todos file: %v", err)
 	}
-	return todos, nil
+	return t, nil
 }

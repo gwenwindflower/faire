@@ -25,17 +25,20 @@ const (
 )
 
 type Todo struct {
-	Task   string `yaml:"task"`
-	Status Status `yaml:"status"`
+	DueDate OptionalTime `yaml:"due_date"`
+	Task    string       `yaml:"task"`
+	Status  Status       `yaml:"status"`
 }
 
 type model struct {
-	todoPath         string
-	choices          []string
-	todos            []Todo
-	newTaskTextInput textinput.Model
-	cursor           int
-	activeView       ViewId
+	todoPath            string
+	todos               []Todo
+	graveyard           []Todo
+	addInputs           []textinput.Model
+	cursor              int
+	activeView          ViewId
+	addInputsFocusIndex int
+	hideCompleted       bool
 }
 
 func initialModel() model {
@@ -55,28 +58,20 @@ func initialModel() model {
 		// because we can't do anything without it
 		log.Fatalf("Could not fetch todos: %v", err)
 	}
-	// Choices is a slice of the Todo.Task fields
-	// we use it as the working state, it's loaded
-	// and written on startup and shutdown respectively
-	choices := []string{}
-	for _, todo := range todos {
-		// This is a common pattern in Go, to grab
-		// a field from a slice of structs and make a slice of
-		// just that field
-		choices = append(choices, todo.Task)
-	}
 	// Text Input is a Bubble, a reusable component built in Bubble Tea
 	// for use in Bubble Tea programs. Saves us writing our own.
-	ti := textinput.New()
-	ti.Placeholder = "Enter a new task"
-	ti.Focus()
-	ti.Cursor.BlinkSpeed = 300
+	nt := textinput.New()
+	nt.Placeholder = "Enter a new task"
+	dd := textinput.New()
+	dd.Placeholder = "Enter a due date in natural language"
 	return model{
-		choices:          choices,
-		todos:            todos,
-		todoPath:         todoPath,
-		activeView:       SelectViewId,
-		newTaskTextInput: ti,
+		todos:               todos,
+		todoPath:            todoPath,
+		graveyard:           []Todo{},
+		activeView:          SelectViewId,
+		addInputs:           []textinput.Model{nt, dd},
+		addInputsFocusIndex: 0,
+		hideCompleted:       false,
 	}
 }
 
