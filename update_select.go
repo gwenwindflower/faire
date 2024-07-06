@@ -53,8 +53,16 @@ func (m model) UpdateSelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "u":
 			m.todos, m.graveyard = undoDeleteTodo(m.todos, m.graveyard)
 		case "a":
+			m.addInputsFocusIndex = 0
+			for i := range m.addInputs {
+				m.addInputs[i].SetValue("")
+				if i == m.addInputsFocusIndex {
+					cmd = m.addInputs[i].Focus()
+				} else {
+					m.addInputs[i].Blur()
+				}
+			}
 			m.activeView = AddViewId
-			cmd = m.addInputs[m.addInputsFocusIndex].Focus()
 		case "h":
 			m.hideCompleted = !m.hideCompleted
 		}
