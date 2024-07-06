@@ -59,8 +59,13 @@ func (m model) UpdateAdd(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.addInputs[i].Blur()
 			}
 			return m, tea.Batch(cmds...)
+		case "?":
+			m.previousViewFromHelp = AddViewId
+			m.activeView = HelpViewId
+			return m, nil
 		case "esc":
 			m.activeView = SelectViewId
+			return m, nil
 		}
 	}
 	cmd := m.updateInputs(msg)

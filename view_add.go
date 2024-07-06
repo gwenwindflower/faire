@@ -1,10 +1,11 @@
 package main
 
 func (m model) ViewAdd() string {
-	s := "Enter a new todo:\n"
+	s := headerStyle.Render("Enter a new todo:")
+	s += "\n"
 	for i := range m.addInputs {
 		s += m.addInputs[i].View() + "\n"
 	}
-	s += "\nPress 'tab' to switch inputs, 'esc' to go back, 'enter' to save."
+	s += "\nPress '?' for shortcuts."
 	return s
 }

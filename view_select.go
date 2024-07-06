@@ -14,7 +14,7 @@ var doneStyle = lipgloss.NewStyle().
 
 var headerStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("#CA9EE6")).
-	Padding(0, 0, 1, 0)
+	Bold(true)
 
 var selectedStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("#414559")).
@@ -51,6 +51,6 @@ func (m model) ViewSelect() string {
 			s += fmt.Sprintf("%s %s\n", checked, task)
 		}
 	}
-	s += "\nPress 'a' to add a new todo, 'q' to quit."
+	s += "\nPress '?' for shortcuts."
 	return s
 }

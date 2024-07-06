@@ -14,6 +14,7 @@ type ViewId int
 const (
 	SelectViewId ViewId = iota
 	AddViewId
+	HelpViewId
 )
 
 type Status int
@@ -31,14 +32,15 @@ type Todo struct {
 }
 
 type model struct {
-	todoPath            string
-	todos               []Todo
-	graveyard           []Todo
-	addInputs           []textinput.Model
-	cursor              int
-	activeView          ViewId
-	addInputsFocusIndex int
-	hideCompleted       bool
+	todoPath             string
+	todos                []Todo
+	graveyard            []Todo
+	addInputs            []textinput.Model
+	cursor               int
+	activeView           ViewId
+	addInputsFocusIndex  int
+	hideCompleted        bool
+	previousViewFromHelp ViewId
 }
 
 func initialModel() model {
@@ -65,13 +67,14 @@ func initialModel() model {
 	dd := textinput.New()
 	dd.Placeholder = "Enter a due date in natural language"
 	return model{
-		todos:               todos,
-		todoPath:            todoPath,
-		graveyard:           []Todo{},
-		activeView:          SelectViewId,
-		addInputs:           []textinput.Model{nt, dd},
-		addInputsFocusIndex: 0,
-		hideCompleted:       false,
+		todos:                todos,
+		todoPath:             todoPath,
+		graveyard:            []Todo{},
+		activeView:           SelectViewId,
+		addInputs:            []textinput.Model{nt, dd},
+		addInputsFocusIndex:  0,
+		hideCompleted:        false,
+		previousViewFromHelp: SelectViewId,
 	}
 }
 
@@ -87,6 +90,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m.UpdateSelect(msg)
 		case AddViewId:
 			return m.UpdateAdd(msg)
+		case HelpViewId:
+			return m.UpdateHelp(msg)
 		}
 	}
 	return m, nil
@@ -98,6 +103,8 @@ func (m model) View() string {
 		return m.ViewSelect()
 	case AddViewId:
 		return m.ViewAdd()
+	case HelpViewId:
+		return m.ViewHelp()
 	default:
 		return fmt.Sprintf("Unknown view: %v", m.activeView)
 	}

@@ -61,6 +61,9 @@ func (m model) UpdateSelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.activeView = AddViewId
 		case "h":
 			m.hideCompleted = !m.hideCompleted
+		case "?":
+			m.previousViewFromHelp = SelectViewId
+			m.activeView = HelpViewId
 		}
 	}
 	return m, cmd
