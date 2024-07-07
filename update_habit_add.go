@@ -9,12 +9,12 @@ func (m model) UpdateHabitAdd(msg tea.Msg) (model, tea.Cmd) {
 		case "ctrl+c", "q":
 			return m, tea.Quit
 		case "enter":
-			habit := m.addHabitInput.Value()
-			if habit == "" {
+			newHabit := m.addHabitInput.Value()
+			if newHabit == "" {
 				m.activeView = HabitSelectViewId
 			}
-			m.habits[habit] = []Habit{}
-			m.habitList = append(m.habitList, habit)
+			(*m.habits)[newHabit] = []Habit{}
+			m.habitList = append(m.habitList, newHabit)
 			m.addHabitInput.SetValue("")
 			m.activeView = HabitSelectViewId
 			return m, nil

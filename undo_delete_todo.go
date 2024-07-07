@@ -4,7 +4,7 @@ func undoDeleteTodo(it []Todo, ig []Todo) (t []Todo, g []Todo) {
 	if len(ig) == 0 {
 		return it, ig
 	}
-	// TODO: better graveyard handlin, need to insert bulk deletes as a single item
+	// TODO: better graveyard handling, need to insert bulk deletes as a single item
 	// Pop the last item off the graveyard
 	undone := ig[len(ig)-1]
 	g = ig[:len(ig)-1]

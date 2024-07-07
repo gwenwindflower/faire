@@ -9,7 +9,7 @@ func ToggleHabitToday(m model) model {
 	// state is preserved.
 	selectedHabitName := m.habitList[m.habitCursor]
 	// This is the actual habit data
-	selectedHabit := m.habits[selectedHabitName]
+	selectedHabit := (*m.habits)[selectedHabitName]
 
 	// We create a pointer to a Habit struct
 	var todaysEntry *Habit
@@ -24,7 +24,7 @@ func ToggleHabitToday(m model) model {
 	}
 	if todaysEntry == nil {
 		// If todaysEntry is nil, we create a new entry
-		m.habits[selectedHabitName] = append(selectedHabit, Habit{Date: m.today, Completed: true})
+		(*m.habits)[selectedHabitName] = append(selectedHabit, Habit{Date: m.today, Completed: true})
 	} else {
 		// Otherwise if we did find an entry, we just toggle the completion
 		todaysEntry.Completed = !todaysEntry.Completed

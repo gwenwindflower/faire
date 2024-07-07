@@ -29,7 +29,7 @@ func (m model) ViewHabitSelect() string {
 		} else {
 			s += name + " "
 		}
-		for _, day := range m.habits[name] {
+		for _, day := range (*m.habits)[name] {
 			if (day.Date.After(m.aWeekBeforeActiveHabitDay) && day.Date.Before(m.activeHabitDay)) || day.Date.Equal(m.activeHabitDay) {
 				if day.Completed {
 					s += habitCheckedStyle.Render("✔")

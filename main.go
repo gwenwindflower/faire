@@ -51,23 +51,23 @@ type AppData struct {
 }
 
 type model struct {
-	habits                    map[string][]Habit
+	today                     time.Time
+	aWeekBeforeActiveHabitDay time.Time
+	activeHabitDay            time.Time
+	habits                    *map[string][]Habit
 	dataFilePath              string
-	appData                   AppData
+	appData                   *AppData
 	habitList                 []string
-	todos                     []Todo
+	todos                     *[]Todo
 	graveyard                 []Todo
 	addInputs                 []textinput.Model
 	addHabitInput             textinput.Model
 	todoCursor                int
-	habitCursor               int
-	activeView                ViewId
-	addInputsFocusIndex       int
 	previousViewFromHelp      ViewId
+	addInputsFocusIndex       int
+	activeView                ViewId
+	habitCursor               int
 	hideCompleted             bool
-	today                     time.Time
-	activeHabitDay            time.Time
-	aWeekBeforeActiveHabitDay time.Time
 }
 
 func initialModel() model {
@@ -113,9 +113,9 @@ func initialModel() model {
 	today, aWeekBeforeActiveHabitDay := GetTimeWindow()
 	return model{
 		dataFilePath:              p,
-		appData:                   d,
-		todos:                     d.Todos,
-		habits:                    d.Habits,
+		appData:                   &d,
+		todos:                     &d.Todos,
+		habits:                    &d.Habits,
 		habitList:                 habitList,
 		graveyard:                 []Todo{},
 		activeView:                SelectViewId,

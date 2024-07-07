@@ -1,10 +1,14 @@
 package main
 
-func deleteTodo(inputTodos []Todo, inputGraveyard []Todo, inputCursor int) (todos []Todo, graveyard []Todo, cursor int) {
-	graveyard = append(inputGraveyard, inputTodos[inputCursor])
-	todos = append(inputTodos[:inputCursor], inputTodos[inputCursor+1:]...)
-	if inputCursor > len(todos)-1 {
-		cursor = len(todos) - 1
+func deleteTodo(todos *[]Todo, inputGraveyard []Todo, inputCursor int) (graveyard []Todo, cursor int) {
+	graveyard = append(inputGraveyard, (*todos)[inputCursor])
+	*todos = append((*todos)[:inputCursor], (*todos)[inputCursor+1:]...)
+	// Keep the cursor in bounds
+	if inputCursor > len(*todos)-1 {
+		cursor = len(*todos) - 1
 	}
-	return todos, graveyard, cursor
+	if inputCursor < 0 {
+		cursor = 0
+	}
+	return
 }

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -36,7 +38,10 @@ func (m model) UpdateHabitSelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.addHabitInput.Focus()
 			m.activeView = HabitAddViewId
 		case "q", "ctrl+c":
-			WriteAppData(m.dataFilePath, m.appData)
+			err := WriteAppData(m.dataFilePath, m.appData)
+			if err != nil {
+				log.Fatalf("Could not write app data: %v", err)
+			}
 			return m, tea.Quit
 		case "?":
 			m.previousViewFromHelp = HabitSelectViewId

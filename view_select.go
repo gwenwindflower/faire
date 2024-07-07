@@ -29,8 +29,8 @@ var dueDateStyle = lipgloss.NewStyle().
 func (m model) ViewSelect() string {
 	s := headerStyle.Render("What do you want to do today 🤗?") + "\n"
 	var task string
-	for i, todo := range m.todos {
-		if m.hideCompleted && m.todos[i].Status == Done {
+	for i, todo := range *m.todos {
+		if m.hideCompleted && (*m.todos)[i].Status == Done {
 			continue
 		}
 		if m.todoCursor == i {
@@ -39,7 +39,7 @@ func (m model) ViewSelect() string {
 			task = todo.Task
 		}
 		checked := " "
-		switch m.todos[i].Status {
+		switch (*m.todos)[i].Status {
 		case InProgress:
 			checked = inProgressStyle.Render("◌")
 		case Done:

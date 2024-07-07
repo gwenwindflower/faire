@@ -13,7 +13,7 @@ func (m model) UpdateSelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 			WriteAppData(m.dataFilePath, m.appData)
 			return m, tea.Quit
 		case "j", "down", "tab", "ctrl+n":
-			if m.todoCursor < len(m.todos)-1 {
+			if m.todoCursor < len(*m.todos)-1 {
 				m.todoCursor++
 			} else {
 				m.todoCursor = 0
@@ -22,32 +22,29 @@ func (m model) UpdateSelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.todoCursor > 0 {
 				m.todoCursor--
 			} else {
-				m.todoCursor = len(m.todos) - 1
+				m.todoCursor = len(*m.todos) - 1
 			}
 		case "enter", " ":
-			switch m.todos[m.todoCursor].Status {
+			switch (*m.todos)[m.todoCursor].Status {
 			case NotStarted:
-				m.todos[m.todoCursor].Status = InProgress
+				(*m.todos)[m.todoCursor].Status = InProgress
 			case InProgress:
-				m.todos[m.todoCursor].Status = Done
+				(*m.todos)[m.todoCursor].Status = Done
 			case Done:
-				m.todos[m.todoCursor].Status = NotStarted
+				(*m.todos)[m.todoCursor].Status = NotStarted
 			}
 		case "1":
-			m.todos[m.todoCursor].Status = NotStarted
+			(*m.todos)[m.todoCursor].Status = NotStarted
 		case "2":
-			m.todos[m.todoCursor].Status = InProgress
+			(*m.todos)[m.todoCursor].Status = InProgress
 		case "3":
-			m.todos[m.todoCursor].Status = Done
+			(*m.todos)[m.todoCursor].Status = Done
 		case "d":
-			m.todos, m.graveyard, m.todoCursor = deleteTodo(m.todos, m.graveyard, m.todoCursor)
-			if m.todoCursor > len(m.todos)-1 {
-				m.todoCursor = len(m.todos) - 1
-			}
+			m.graveyard, m.todoCursor = deleteTodo(m.todos, m.graveyard, m.todoCursor)
 		case "D":
-			m.todos, m.graveyard, m.todoCursor = deleteCompletedTodos(m.todos, m.graveyard, m.todoCursor)
+			m.graveyard, m.todoCursor = deleteCompletedTodos(m.todos, m.graveyard, m.todoCursor)
 		case "u":
-			m.todos, m.graveyard = undoDeleteTodo(m.todos, m.graveyard)
+			*m.todos, m.graveyard = undoDeleteTodo(*m.todos, m.graveyard)
 		case "a":
 			m.addInputsFocusIndex = 0
 			for i := range m.addInputs {
