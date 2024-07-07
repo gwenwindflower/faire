@@ -3,6 +3,11 @@ package main
 import "time"
 
 func (m model) MoveActiveHabitDay(direction int) model {
+	// TODO: Create m.ActiveHabitDateRange, a slice of dates
+	// that way we can creat empty days for days that don't have
+	// a Habit record yet. For example, let's say you don't use the
+	// app for a week, you'd want to see the days that you missed
+	// in the UI so you can catch up on your habits.
 	// If activeHabitDay is zero for some reason, we initialize it to today
 	if m.activeHabitDay.IsZero() {
 		m.activeHabitDay = m.today

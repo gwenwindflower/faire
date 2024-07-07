@@ -1,6 +1,9 @@
 package main
 
 func ToggleHabitToday(m model) model {
+	// TODO: this should toggle the active day
+	// not just today.
+
 	// m.habitList is a slice of strings containing
 	// the names of the habits, which are map keys
 	// so cannot otherwise be iterated over.

@@ -4,18 +4,22 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-var habitDateStyle = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("#A9B1D6"))
+var (
+	habitDateStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#A9B1D6")).
+			Width(appWidth).
+			Align(lipgloss.Center)
 
-var habitCheckedStyle = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("#a6d189"))
+	habitCheckedStyle = lipgloss.NewStyle().
+				Foreground(lipgloss.Color("#a6d189"))
 
-var habitMissedStyle = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("#e78284"))
+	habitMissedStyle = lipgloss.NewStyle().
+				Foreground(lipgloss.Color("#e78284"))
 
-var selectedHabitNameStyle = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("#414559")).
-	Background(lipgloss.Color("#C6D0F5"))
+	selectedHabitNameStyle = lipgloss.NewStyle().
+				Foreground(lipgloss.Color("#414559")).
+				Background(lipgloss.Color("#C6D0F5"))
+)
 
 func (m model) ViewHabitSelect() string {
 	s := ""

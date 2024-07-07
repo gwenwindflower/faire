@@ -51,16 +51,16 @@ type AppData struct {
 }
 
 type model struct {
+	activeHabitDay            time.Time
 	today                     time.Time
 	aWeekBeforeActiveHabitDay time.Time
-	activeHabitDay            time.Time
-	habits                    *map[string][]Habit
-	dataFilePath              string
-	appData                   *AppData
-	habitList                 []string
 	todos                     *[]Todo
-	graveyard                 []Todo
+	habits                    *map[string][]Habit
+	appData                   *AppData
+	dataFilePath              string
 	addInputs                 []textinput.Model
+	graveyard                 []Todo
+	habitList                 []string
 	addHabitInput             textinput.Model
 	todoCursor                int
 	previousViewFromHelp      ViewId
