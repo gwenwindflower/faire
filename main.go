@@ -51,20 +51,23 @@ type AppData struct {
 }
 
 type model struct {
-	habits               map[string][]Habit
-	dataFilePath         string
-	appData              AppData
-	habitList            []string
-	todos                []Todo
-	graveyard            []Todo
-	addInputs            []textinput.Model
-	addHabitInput        textinput.Model
-	todoCursor           int
-	habitCursor          int
-	activeView           ViewId
-	addInputsFocusIndex  int
-	previousViewFromHelp ViewId
-	hideCompleted        bool
+	habits                    map[string][]Habit
+	dataFilePath              string
+	appData                   AppData
+	habitList                 []string
+	todos                     []Todo
+	graveyard                 []Todo
+	addInputs                 []textinput.Model
+	addHabitInput             textinput.Model
+	todoCursor                int
+	habitCursor               int
+	activeView                ViewId
+	addInputsFocusIndex       int
+	previousViewFromHelp      ViewId
+	hideCompleted             bool
+	today                     time.Time
+	activeHabitDay            time.Time
+	aWeekBeforeActiveHabitDay time.Time
 }
 
 func initialModel() model {
@@ -103,19 +106,27 @@ func initialModel() model {
 	for k := range d.Habits {
 		habitList = append(habitList, k)
 	}
+	// We use a window of today's date through a
+	// week before in several places,
+	// particularly habit tracking, so we just
+	// put it in the model so we do it once.
+	today, aWeekBeforeActiveHabitDay := GetTimeWindow()
 	return model{
-		dataFilePath:         p,
-		appData:              d,
-		todos:                d.Todos,
-		habits:               d.Habits,
-		habitList:            habitList,
-		graveyard:            []Todo{},
-		activeView:           SelectViewId,
-		addInputs:            []textinput.Model{nt, dd},
-		addHabitInput:        ah,
-		addInputsFocusIndex:  0,
-		hideCompleted:        false,
-		previousViewFromHelp: SelectViewId,
+		dataFilePath:              p,
+		appData:                   d,
+		todos:                     d.Todos,
+		habits:                    d.Habits,
+		habitList:                 habitList,
+		graveyard:                 []Todo{},
+		activeView:                SelectViewId,
+		addInputs:                 []textinput.Model{nt, dd},
+		addHabitInput:             ah,
+		addInputsFocusIndex:       0,
+		hideCompleted:             false,
+		previousViewFromHelp:      SelectViewId,
+		today:                     today,
+		activeHabitDay:            today,
+		aWeekBeforeActiveHabitDay: aWeekBeforeActiveHabitDay,
 	}
 }
 

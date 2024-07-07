@@ -1,10 +1,11 @@
 package main
 
 import (
-	"time"
-
 	"github.com/charmbracelet/lipgloss"
 )
+
+var habitDateStyle = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("#A9B1D6"))
 
 var habitCheckedStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("#a6d189"))
@@ -18,12 +19,10 @@ var selectedHabitNameStyle = lipgloss.NewStyle().
 
 func (m model) ViewHabitSelect() string {
 	s := ""
-	header := headerStyle.Render("Habits")
-	s += header + "\n"
-
-	// Calculate the cutoff time once
-	cutoffTime := time.Now().Add(-7 * 24 * time.Hour)
-
+	header := headerStyle.Render("Habit Tracker") + "\n"
+	s += header
+	date := habitDateStyle.Render(m.aWeekBeforeActiveHabitDay.Format("Mon Jan 2"), " - ", m.activeHabitDay.Format("Mon Jan 2"))
+	s += date + "\n"
 	for i, name := range m.habitList {
 		if m.habitCursor == i {
 			s += selectedHabitNameStyle.Render(name) + " "
@@ -31,7 +30,7 @@ func (m model) ViewHabitSelect() string {
 			s += name + " "
 		}
 		for _, day := range m.habits[name] {
-			if day.Date.After(cutoffTime) || day.Date.Equal(cutoffTime) {
+			if (day.Date.After(m.aWeekBeforeActiveHabitDay) && day.Date.Before(m.activeHabitDay)) || day.Date.Equal(m.activeHabitDay) {
 				if day.Completed {
 					s += habitCheckedStyle.Render("✔")
 				} else {
