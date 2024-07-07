@@ -31,7 +31,7 @@ func (m model) UpdateAdd(msg tea.Msg) (tea.Model, tea.Cmd) {
 						}
 						m.todos = append(m.todos, Todo{Task: task, Status: NotStarted, DueDate: NewOptionalTime(parsedDate)})
 					}
-					err := WriteTodos(m.todoPath, m.todos)
+					err := WriteAppData(m.dataFilePath, m.appData)
 					if err != nil {
 						log.Fatalf("Could not write todos: %v", err)
 					}
@@ -66,6 +66,8 @@ func (m model) UpdateAdd(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "esc":
 			m.activeView = SelectViewId
 			return m, nil
+		case "ctrl+c":
+			return m, tea.Quit
 		}
 	}
 	cmd := m.updateInputs(msg)

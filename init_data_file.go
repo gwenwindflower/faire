@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func InitTodosFile() (tp string, err error) {
+func InitDataFile() (tp string, err error) {
 	tp = ""
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -18,10 +18,10 @@ func InitTodosFile() (tp string, err error) {
 		os.MkdirAll(filepath.Dir(tp), 0755)
 		_, err = os.Create(tp)
 		if err != nil {
-			return tp, fmt.Errorf("could not create todos file: %v", err)
+			return tp, fmt.Errorf("could not create data file: %v", err)
 		}
 	} else if err != nil {
-		return tp, fmt.Errorf("error checking for todos file: %v", err)
+		return tp, fmt.Errorf("error checking for data file: %v", err)
 	}
 	return tp, nil
 }

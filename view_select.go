@@ -16,6 +16,9 @@ var headerStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("#CA9EE6")).
 	Bold(true)
 
+var footerStyle = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("#838ba7"))
+
 var selectedStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("#414559")).
 	Background(lipgloss.Color("#C6D0F5"))
@@ -30,7 +33,7 @@ func (m model) ViewSelect() string {
 		if m.hideCompleted && m.todos[i].Status == Done {
 			continue
 		}
-		if m.cursor == i {
+		if m.todoCursor == i {
 			task = selectedStyle.Render(todo.Task)
 		} else {
 			task = todo.Task
@@ -51,6 +54,7 @@ func (m model) ViewSelect() string {
 			s += fmt.Sprintf("%s %s\n", checked, task)
 		}
 	}
-	s += "\nPress '?' for shortcuts."
+	footer := footerStyle.Render("Press '?' for shortcuts.")
+	s += footer
 	return s
 }

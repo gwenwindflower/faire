@@ -8,20 +8,20 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func LoadTodos(todoPath string) ([]Todo, error) {
-	t := []Todo{}
-	tf, err := os.Open(todoPath)
+func LoadData(filepath string) (AppData, error) {
+	d := AppData{}
+	f, err := os.Open(filepath)
 	if err != nil {
 		log.Fatalf("Could not open todos file: %v", err)
 	}
-	defer tf.Close()
-	data, err := io.ReadAll(tf)
+	defer f.Close()
+	data, err := io.ReadAll(f)
 	if err != nil {
 		log.Fatalf("Could not read todos file: %v", err)
 	}
-	err = yaml.Unmarshal(data, &t)
+	err = yaml.Unmarshal(data, &d)
 	if err != nil {
 		log.Fatalf("Could not unmarshal todos file: %v", err)
 	}
-	return t, nil
+	return d, nil
 }

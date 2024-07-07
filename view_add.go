@@ -6,6 +6,7 @@ func (m model) ViewAdd() string {
 	for i := range m.addInputs {
 		s += m.addInputs[i].View() + "\n"
 	}
-	s += "\nPress '?' for shortcuts."
+	footer := footerStyle.Render("Press '?' for shortcuts.")
+	s += footer
 	return s
 }

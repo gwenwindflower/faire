@@ -10,42 +10,42 @@ func (m model) UpdateSelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c", "q":
-			WriteTodos(m.todoPath, m.todos)
+			WriteAppData(m.dataFilePath, m.appData)
 			return m, tea.Quit
-		case "j", "down":
-			if m.cursor < len(m.todos)-1 {
-				m.cursor++
+		case "j", "down", "tab", "ctrl+n":
+			if m.todoCursor < len(m.todos)-1 {
+				m.todoCursor++
 			} else {
-				m.cursor = 0
+				m.todoCursor = 0
 			}
-		case "k", "up":
-			if m.cursor > 0 {
-				m.cursor--
+		case "k", "up", "shift+tab", "ctrl+p":
+			if m.todoCursor > 0 {
+				m.todoCursor--
 			} else {
-				m.cursor = len(m.todos) - 1
+				m.todoCursor = len(m.todos) - 1
 			}
 		case "enter", " ":
-			switch m.todos[m.cursor].Status {
+			switch m.todos[m.todoCursor].Status {
 			case NotStarted:
-				m.todos[m.cursor].Status = InProgress
+				m.todos[m.todoCursor].Status = InProgress
 			case InProgress:
-				m.todos[m.cursor].Status = Done
+				m.todos[m.todoCursor].Status = Done
 			case Done:
-				m.todos[m.cursor].Status = NotStarted
+				m.todos[m.todoCursor].Status = NotStarted
 			}
 		case "1":
-			m.todos[m.cursor].Status = NotStarted
+			m.todos[m.todoCursor].Status = NotStarted
 		case "2":
-			m.todos[m.cursor].Status = InProgress
+			m.todos[m.todoCursor].Status = InProgress
 		case "3":
-			m.todos[m.cursor].Status = Done
+			m.todos[m.todoCursor].Status = Done
 		case "d":
-			m.todos, m.graveyard, m.cursor = deleteTodo(m.todos, m.graveyard, m.cursor)
-			if m.cursor > len(m.todos)-1 {
-				m.cursor = len(m.todos) - 1
+			m.todos, m.graveyard, m.todoCursor = deleteTodo(m.todos, m.graveyard, m.todoCursor)
+			if m.todoCursor > len(m.todos)-1 {
+				m.todoCursor = len(m.todos) - 1
 			}
 		case "D":
-			m.todos, m.graveyard, m.cursor = deleteCompletedTodos(m.todos, m.graveyard, m.cursor)
+			m.todos, m.graveyard, m.todoCursor = deleteCompletedTodos(m.todos, m.graveyard, m.todoCursor)
 		case "u":
 			m.todos, m.graveyard = undoDeleteTodo(m.todos, m.graveyard)
 		case "a":
@@ -61,6 +61,8 @@ func (m model) UpdateSelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.activeView = AddViewId
 		case "h":
 			m.hideCompleted = !m.hideCompleted
+		case "r":
+			m.activeView = HabitSelectViewId
 		case "?":
 			m.previousViewFromHelp = SelectViewId
 			m.activeView = HelpViewId
