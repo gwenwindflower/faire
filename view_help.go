@@ -6,7 +6,7 @@ import (
 )
 
 var helpHeaderStyle = headerStyle.
-	Width(appWidth).
+	Width(64).
 	Border(lipgloss.RoundedBorder()).
 	Align(lipgloss.Center)
 
@@ -16,7 +16,7 @@ var subheaderStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("#a6d189"))
 
 func (m model) ViewHelp() string {
-	header := helpHeaderStyle.Render("Shortcuts") + "\n"
+	header := helpHeaderStyle.Render("Shortcuts")
 	subHeader := subheaderStyle.Render(func() string {
 		switch m.activeHelpScreenId {
 		case SelectScreenId:
@@ -29,7 +29,7 @@ func (m model) ViewHelp() string {
 			return "Add Habit"
 		}
 		return "Oops! Something bad happened"
-	}()) + "\n"
+	}())
 
 	t := table.New().
 		Headers("Key(s)", "Action").
@@ -92,10 +92,11 @@ func (m model) ViewHelp() string {
 			{"ctrl+c", "Quit without saving"},
 		}...)
 	}
-	footer := footerStyle.Render("\nUse h/l to cycle through help screens.")
-	s := header
-	s += subHeader
-	s += t.Render()
+	footer := footerStyle.Render("Use h/l to cycle through help screens.")
+
+	s := header + "\n"
+	s += subHeader + "\n"
+	s += t.Render() + "\n"
 	s += footer
 	return s
 }
