@@ -36,6 +36,7 @@ func (m model) UpdateHabitSelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.activeView = SelectViewId
 		case "s":
 			m.activeHabitDay = m.today
+			m.aWeekBeforeActiveHabitDay = m.activeHabitDay.AddDate(0, 0, -7)
 		case "a":
 			m.addHabitInput.Focus()
 			m.activeView = HabitAddViewId
