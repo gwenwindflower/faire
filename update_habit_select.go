@@ -34,6 +34,8 @@ func (m model) UpdateHabitSelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m = ToggleHabitToday(m)
 		case "t":
 			m.activeView = SelectViewId
+		case "s":
+			m.activeHabitDay = m.today
 		case "a":
 			m.addHabitInput.Focus()
 			m.activeView = HabitAddViewId

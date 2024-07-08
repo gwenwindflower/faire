@@ -68,7 +68,7 @@ func (m model) ViewHelp() string {
 			{"enter", "Save todo"},
 			{"tab/shift+tab", "Move input focus"},
 			{"up/down", "Move input focus"},
-			{"ctrl+c", "Quit"},
+			{"ctrl+c", "Quit without saving"},
 		}...)
 	case HabitScreenId:
 		t.Rows([][]string{
@@ -76,6 +76,8 @@ func (m model) ViewHelp() string {
 			{"a", "Add habit"},
 			{"h/l", "Move active day"},
 			{"H/L", "Move active day by week"},
+			{"s", "Reset active day to today"},
+			{"t", "Return to todo list"},
 			{"j/k", "Move cursor"},
 			{"down/up", "Move cursor"},
 			{"ctrl+n/ctrl+p", "Move cursor"},
