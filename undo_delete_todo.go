@@ -1,14 +1,17 @@
 package main
 
-func undoDeleteTodo(it []Todo, ig []Todo) (t []Todo, g []Todo) {
-	if len(ig) == 0 {
-		return it, ig
+func undoDeleteTodo(inputTodos []Todo, inputGraveyard [][]Todo) (todos []Todo, graveyard [][]Todo) {
+	if len(inputGraveyard) == 0 {
+		return inputTodos, inputGraveyard
 	}
-	// TODO: better graveyard handling, need to insert bulk deletes as a single item
-	// Pop the last item off the graveyard
-	undone := ig[len(ig)-1]
-	g = ig[:len(ig)-1]
-	// Add the undone todo back to the todos
-	t = append(it, undone)
-	return t, g
+	mostRecentGrave := inputGraveyard[len(inputGraveyard)-1]
+	graveyard = inputGraveyard[:len(inputGraveyard)-1]
+
+	// We can save a tiiiny bit of memory by pre-allocating the slice
+	// since we know the exact length we need
+	todos = make([]Todo, 0, len(inputTodos)+len(mostRecentGrave))
+	todos = append(todos, inputTodos...)
+	todos = append(todos, mostRecentGrave...)
+
+	return
 }

@@ -59,7 +59,7 @@ type model struct {
 	appData                   *AppData
 	dataFilePath              string
 	addInputs                 []textinput.Model
-	graveyard                 []Todo
+	graveyard                 [][]Todo
 	habitList                 []string
 	addHabitInput             textinput.Model
 	activeHelpScreenId        HelpScreenId
@@ -118,7 +118,7 @@ func initialModel() model {
 		todos:                     &d.Todos,
 		habits:                    &d.Habits,
 		habitList:                 habitList,
-		graveyard:                 []Todo{},
+		graveyard:                 [][]Todo{},
 		activeView:                SelectViewId,
 		addInputs:                 []textinput.Model{nt, dd},
 		addHabitInput:             ah,

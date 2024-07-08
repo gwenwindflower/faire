@@ -1,8 +1,8 @@
 package main
 
 func deleteCompletedTodos(
-	todos *[]Todo, inputGraveyard []Todo, inputCursor int,
-) (graveyard []Todo, cursor int) {
+	todos *[]Todo, inputGraveyard [][]Todo, inputCursor int,
+) (graveyard [][]Todo, cursor int) {
 	// Preserve the graveyard, we only want to add to it
 	graveyard = inputGraveyard
 	cursor = inputCursor
@@ -10,9 +10,10 @@ func deleteCompletedTodos(
 	// We'll use this to make sure our cursor
 	// doesn't go out of bounds after deletion
 	deletedCount := 0
+	grave := []Todo{}
 	for _, t := range *todos {
 		if t.Status == Done {
-			graveyard = append(graveyard, t)
+			grave = append(grave, t)
 			deletedCount++
 		} else {
 			// NB: because this is a named return, we don't need to
@@ -37,6 +38,7 @@ func deleteCompletedTodos(
 	if cursor < 0 {
 		cursor = 0
 	}
+	graveyard = append(graveyard, grave)
 	// Because we used named return values, we don't need to return them here
 	// We can just `return` and Go will know what to do
 	return
