@@ -1,6 +1,7 @@
 # 🫧🌿 faire 🌸✨
 
-> [!WARNING] This project is still super early! Use at your own risk.
+> [!WARNING]
+> This project is still super early! Use at your own risk.
 
 ## 🧼🦙 a kind and tidy CLI for your tasks and habits 🧹🦋
 
