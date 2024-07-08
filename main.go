@@ -59,6 +59,7 @@ type model struct {
 	appData                   *AppData
 	dataFilePath              string
 	addInputs                 []textinput.Model
+	activeHelpScreenId        HelpScreenId
 	graveyard                 []Todo
 	habitList                 []string
 	addHabitInput             textinput.Model

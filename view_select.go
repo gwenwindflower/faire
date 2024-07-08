@@ -70,18 +70,18 @@ func (m model) ViewSelect() string {
 			continue
 		}
 		if m.todoCursor == i {
-			task = selectedStyle.Render(todo.Task)
+			task = " " + selectedStyle.Render(todo.Task)
 		} else {
-			task = todo.Task
+			task = " " + todo.Task
 		}
 		checked := " "
 		switch (*m.todos)[i].Status {
 		case InProgress:
-			checked = inProgressStyle.Render("◌")
+			checked = inProgressStyle.Render("󰦕")
 		case Done:
-			checked = doneStyle.Render("✔")
+			checked = doneStyle.Render("󰗡")
 		default:
-			checked = "⬚"
+			checked = "󰄰"
 		}
 		if todo.DueDate.IsSet() {
 			dueDate := dueDateStyle.Render(todo.DueDate.Format("2006-01-02"))
@@ -91,7 +91,13 @@ func (m model) ViewSelect() string {
 		}
 	}
 	s += t.Render() + "\n"
-	footer := footerStyle.Render("\nPress '?' for shortcuts.")
+	if m.hideCompleted {
+		s += subheaderStyle.
+			Width(appWidth).
+			Align(lipgloss.Center).
+			Render("Completed tasks hidden.\n")
+	}
+	footer := footerStyle.Render("\nPress ? for shortcuts.")
 	s += footer
 	return s
 }

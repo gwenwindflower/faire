@@ -6,7 +6,7 @@ func (m model) UpdateHabitAdd(msg tea.Msg) (model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "ctrl+c", "q":
+		case "ctrl+c":
 			return m, tea.Quit
 		case "enter":
 			newHabit := m.addHabitInput.Value()
