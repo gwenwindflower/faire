@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/lipgloss/table"
 )
 
 var (
@@ -31,17 +32,32 @@ func (m model) ViewHabitSelect() string {
 	s += header
 	date := habitDateStyle.Render(m.aWeekBeforeActiveHabitDay.Format("Mon Jan 2"), " - ", m.activeHabitDay.Format("Mon Jan 2"))
 	s += date + "\n"
+
+	t := table.New().
+		Width(appWidth).
+		Headers(
+			"Habit",
+			"Days",
+		)
 	for i, name := range m.habitList {
-		habitDays := (*m.habits)[name]
 		if m.habitCursor == i {
-			s += selectedHabitNameStyle.Render(name) + " "
-			s += renderHabitWeek(habitDays, m, true)
+			t.Row(selectedHabitNameStyle.Render(name), renderHabitWeek((*m.habits)[name], m, true))
 		} else {
-			s += name + " "
-			s += renderHabitWeek(habitDays, m, false)
+			t.Row(name, renderHabitWeek((*m.habits)[name], m, false))
 		}
-		s += "\n"
 	}
+	t.StyleFunc(func(row, col int) lipgloss.Style {
+		if col == 0 {
+			return lipgloss.NewStyle().
+				Width(54).
+				Align(lipgloss.Left)
+		} else {
+			return lipgloss.NewStyle().
+				Width(12).
+				Align(lipgloss.Center)
+		}
+	})
+	s += t.Render() + "\n"
 	footer := footerStyle.Render("Press '?' for shortcuts.")
 	s += footer
 	return s
