@@ -19,6 +19,10 @@ var (
 	selectedHabitNameStyle = lipgloss.NewStyle().
 				Foreground(lipgloss.Color("#414559")).
 				Background(lipgloss.Color("#C6D0F5"))
+
+	activeHabitDayStyle = lipgloss.NewStyle().
+				Foreground(lipgloss.Color("#414559")).
+				Background(lipgloss.Color("#C6D0F5"))
 )
 
 func (m model) ViewHabitSelect() string {
@@ -28,23 +32,39 @@ func (m model) ViewHabitSelect() string {
 	date := habitDateStyle.Render(m.aWeekBeforeActiveHabitDay.Format("Mon Jan 2"), " - ", m.activeHabitDay.Format("Mon Jan 2"))
 	s += date + "\n"
 	for i, name := range m.habitList {
+		habitDays := (*m.habits)[name]
 		if m.habitCursor == i {
 			s += selectedHabitNameStyle.Render(name) + " "
+			s += renderHabitWeek(habitDays, m, true)
 		} else {
 			s += name + " "
-		}
-		for _, day := range (*m.habits)[name] {
-			if (day.Date.After(m.aWeekBeforeActiveHabitDay) && day.Date.Before(m.activeHabitDay)) || day.Date.Equal(m.activeHabitDay) {
-				if day.Completed {
-					s += habitCheckedStyle.Render("✔")
-				} else {
-					s += habitMissedStyle.Render("-")
-				}
-			}
+			s += renderHabitWeek(habitDays, m, false)
 		}
 		s += "\n"
 	}
 	footer := footerStyle.Render("Press '?' for shortcuts.")
 	s += footer
+	return s
+}
+
+func renderHabitWeek(habitDays []Habit, m model, selected bool) string {
+	s := ""
+	for _, day := range habitDays {
+		if day.Date.After(m.aWeekBeforeActiveHabitDay) && (day.Date.Before(m.activeHabitDay) || day.Date.Equal(m.activeHabitDay)) {
+			if day.Completed {
+				if selected && day.Date.Equal(m.activeHabitDay) {
+					s += activeHabitDayStyle.Render("✔")
+				} else {
+					s += habitCheckedStyle.Render("✔")
+				}
+			} else {
+				if selected && day.Date.Equal(m.activeHabitDay) {
+					s += activeHabitDayStyle.Render("-")
+				} else {
+					s += habitMissedStyle.Render("-")
+				}
+			}
+		}
+	}
 	return s
 }

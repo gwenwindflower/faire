@@ -1,6 +1,8 @@
 package main
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 func (m model) UpdateHabitAdd(msg tea.Msg) (model, tea.Cmd) {
 	switch msg := msg.(type) {
@@ -13,7 +15,9 @@ func (m model) UpdateHabitAdd(msg tea.Msg) (model, tea.Cmd) {
 			if newHabit == "" {
 				m.activeView = HabitSelectViewId
 			}
-			(*m.habits)[newHabit] = []Habit{}
+			habitDays := []Habit{}
+			initialEntries := AddEmptyHabitDays(habitDays, m.aWeekBeforeActiveHabitDay, m.activeHabitDay)
+			(*m.habits)[newHabit] = initialEntries
 			m.habitList = append(m.habitList, newHabit)
 			m.addHabitInput.SetValue("")
 			m.activeView = HabitSelectViewId

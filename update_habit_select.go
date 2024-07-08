@@ -10,6 +10,9 @@ func (m model) UpdateHabitSelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
+		case " ":
+			// This is our main behavior for this view
+			m = ToggleActiveHabit(m)
 		case "j", "down", "ctrl+n", "tab":
 			if m.habitCursor < len(m.habitList)-1 {
 				m.habitCursor++
@@ -22,6 +25,8 @@ func (m model) UpdateHabitSelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else {
 				m.habitCursor = len(m.habitList) - 1
 			}
+		case "d":
+			m.DeleteHabit()
 		case "h", "left":
 			m = m.MoveActiveHabitDay(-1)
 		case "l", "right":
@@ -30,8 +35,6 @@ func (m model) UpdateHabitSelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m = m.MoveActiveHabitDay(-7)
 		case "L":
 			m = m.MoveActiveHabitDay(7)
-		case " ":
-			m = ToggleHabitToday(m)
 		case "t":
 			m.activeView = SelectViewId
 		case "s":

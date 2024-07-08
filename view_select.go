@@ -8,8 +8,8 @@ import (
 const appWidth = 66
 
 var (
-	cuteBorder = lipgloss.Border{
-		Bottom: "🌿🌸🫧✨🦋",
+	todoBorder = lipgloss.Border{
+		Bottom: "🌿🌸🫧✨🦋✨🫧🌸",
 	}
 
 	inProgressStyle = lipgloss.NewStyle().
@@ -23,7 +23,7 @@ var (
 			Width(appWidth).
 			Align(lipgloss.Center).
 			Bold(true).
-			BorderStyle(cuteBorder).BorderBottom(true)
+			BorderStyle(todoBorder).BorderBottom(true)
 
 	footerStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#838ba7")).

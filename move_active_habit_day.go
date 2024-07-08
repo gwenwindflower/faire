@@ -42,5 +42,9 @@ func (m model) MoveActiveHabitDay(direction int) model {
 	m.activeHabitDay = newActiveDay
 	m.aWeekBeforeActiveHabitDay = newWeekBefore
 
+	for _, name := range m.habitList {
+		(*m.habits)[name] = AddEmptyHabitDays((*m.habits)[name], m.aWeekBeforeActiveHabitDay, m.activeHabitDay)
+	}
+
 	return m
 }

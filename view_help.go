@@ -74,6 +74,7 @@ func (m model) ViewHelp() string {
 		t.Rows([][]string{
 			{"space", "Cycle habit status"},
 			{"a", "Add habit"},
+			{"d", "Delete habit"},
 			{"h/l", "Move active day"},
 			{"H/L", "Move active day by week"},
 			{"s", "Reset active day to today"},

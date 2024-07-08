@@ -1,6 +1,8 @@
 package main
 
-func ToggleHabitToday(m model) model {
+import "sort"
+
+func ToggleActiveHabit(m model) model {
 	// TODO: this should toggle the active day
 	// not just today.
 
@@ -15,22 +17,25 @@ func ToggleHabitToday(m model) model {
 	selectedHabit := (*m.habits)[selectedHabitName]
 
 	// We create a pointer to a Habit struct
-	var todaysEntry *Habit
+	var activeEntry *Habit
 	// Then e iterate over the selected habit (indicated by cursor)
 	// to find the entry for today (if it exists!)
 	// If it does we set todaysEntry to point to it
 	for i, h := range selectedHabit {
-		if h.Date.Equal(m.today) {
-			todaysEntry = &selectedHabit[i]
+		if h.Date.Equal(m.activeHabitDay) {
+			activeEntry = &selectedHabit[i]
 			break
 		}
 	}
-	if todaysEntry == nil {
-		// If todaysEntry is nil, we create a new entry
-		(*m.habits)[selectedHabitName] = append(selectedHabit, Habit{Date: m.today, Completed: true})
+	if activeEntry == nil {
+		// If activeEntry is nil, we create a new entry
+		selectedHabit = append(selectedHabit, Habit{Date: m.activeHabitDay, Completed: true})
+		sort.Slice(selectedHabit, func(i, j int) bool {
+			return selectedHabit[i].Date.Before(selectedHabit[j].Date)
+		})
 	} else {
 		// Otherwise if we did find an entry, we just toggle the completion
-		todaysEntry.Completed = !todaysEntry.Completed
+		activeEntry.Completed = !activeEntry.Completed
 	}
 	return m
 }
